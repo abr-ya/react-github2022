@@ -1,3 +1,5 @@
 import Loader from "./layout/Loader/Loader";
 
-export { Loader };
+import UserResults from "./users/UsersList";
+
+export { Loader, UserResults };
