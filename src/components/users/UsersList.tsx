@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Loader } from "..";
+import { IUser } from "../../interfaces";
 import { getUsersReguest } from "../../services/api";
+import UserCard from "./UserCard";
 
 const UsersList = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getUsers = async () => {
@@ -23,7 +25,7 @@ const UsersList = () => {
   return (
     <div className="grid grid-cols-1 gap-2 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2">
       {users.map((user) => (
-        <h3 key={user.id}>{user.login}</h3>
+        <UserCard key={user.id} user={user} />
       ))}
     </div>
   );
