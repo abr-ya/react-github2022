@@ -1,6 +1,6 @@
 import { createContext, FC, ReactNode, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import { IUser } from "../interfaces";
+import { IUser, IUserDetail } from "../interfaces";
 import { findUsersReguest, getUserReguest } from "../services/api";
 import githubReducer from "./GithubReducer";
 
@@ -18,7 +18,7 @@ const GithubContext = createContext<GithubContextType>(initialContext);
 
 interface IGithubManagerResult {
   users: IUser[];
-  user: IUser | null;
+  user: IUserDetail | null;
   loading: boolean;
   findUsers: (text: string) => void;
   getUser: (text: string) => void;

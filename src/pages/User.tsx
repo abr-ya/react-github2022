@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Loader } from "../components";
+import { Loader, UserDetailTop } from "../components";
 import GithubContext from "../context/GithubContext";
 
 const User = () => {
@@ -13,7 +13,7 @@ const User = () => {
 
   if (loading) return <Loader />;
 
-  return <div>{user?.login}</div>;
+  return <div className="w-full mx-auto lg:w-10/12">{user?.login && <UserDetailTop user={user} />}</div>;
 };
 
 export default User;
