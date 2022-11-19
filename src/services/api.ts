@@ -14,3 +14,12 @@ export const getUsersReguest = async () => {
 
   return { data, status };
 };
+
+export const findUsersReguest = async (text: string) => {
+  const params = new URLSearchParams({
+    q: text,
+  });
+  const { data, status } = await axios.get(`${baseUrl}search/users?${params}`, createOptions());
+
+  return { data, status };
+};
