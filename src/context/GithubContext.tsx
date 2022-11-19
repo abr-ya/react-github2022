@@ -1,33 +1,42 @@
-import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import { createContext, FC, ReactNode, useEffect, useReducer, useState } from "react";
 import { IUser } from "../interfaces";
 import { getUsersReguest } from "../services/api";
+import githubReducer from "./GithubReducer";
 
 type GithubContextType = ReturnType<typeof GithubManager>;
 
-const GithubContext = createContext<GithubContextType>({
+const initialContext = {
   users: [],
-  isLoading: true,
+  loading: true,
   // findUsers: () => false,
-});
+};
+const GithubContext = createContext<GithubContextType>(initialContext);
 
 interface IGithubManagerResult {
   users: IUser[];
-  isLoading: boolean;
+  loading: boolean;
   // findUsers: () => void;
 }
 
 const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
-  const [users, setUsers] = useState(initialUsers);
-  const [isLoading, setIsLoading] = useState(true);
+  const initialState = {
+    users: initialUsers,
+    loading: false,
+  };
+
+  const [state, dispatch] = useReducer(githubReducer, initialState);
 
   const findUsers = async () => {
+    setLoading();
     const { data, status } = await getUsersReguest();
     console.log(data, status);
 
-    setUsers(data);
     setTimeout(() => {
       console.log("Loading delay from Context!");
-      setIsLoading(false);
+      dispatch({
+        type: "GET_USERS",
+        payload: data,
+      });
     }, 500);
   };
 
@@ -35,7 +44,10 @@ const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
     findUsers();
   }, []);
 
-  return { users, isLoading };
+  // Set loading
+  const setLoading = () => dispatch({ type: "SET_LOADING" });
+
+  return { ...state };
 };
 
 const startValues = [];

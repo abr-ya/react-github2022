@@ -4,9 +4,9 @@ import GithubContext from "../../context/GithubContext";
 import UserCard from "./UserCard";
 
 const UsersList = () => {
-  const { users, isLoading } = useContext(GithubContext);
+  const { users, loading } = useContext(GithubContext);
 
-  if (isLoading) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <div className="grid grid-cols-1 gap-2 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2">
