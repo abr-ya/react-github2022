@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const baseUrl = process.env.API_URL;
 const apiKey = process.env.API_KEY;
 
 const createOptions = () => ({
   headers: {
-    Authorization: `token ${process.env.API_KEY}`,
+    Authorization: `token ${apiKey}`,
   },
 });
 
@@ -22,4 +22,19 @@ export const findUsersReguest = async (text: string) => {
   const { data, status } = await axios.get(`${baseUrl}search/users?${params}`, createOptions());
 
   return { data, status };
+};
+
+export const getUserReguest = async (text: string) => {
+  let response: AxiosResponse;
+  let status: number;
+
+  try {
+    response = await axios.get(`${baseUrl}users/${text}`, createOptions());
+    status = response?.status;
+  } catch (err) {
+    console.log(err);
+    status = err.response?.status;
+  }
+
+  return { data: response?.data, status };
 };

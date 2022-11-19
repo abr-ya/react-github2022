@@ -1,28 +1,36 @@
 import { createContext, FC, ReactNode, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { IUser } from "../interfaces";
-import { findUsersReguest } from "../services/api";
+import { findUsersReguest, getUserReguest } from "../services/api";
 import githubReducer from "./GithubReducer";
 
 type GithubContextType = ReturnType<typeof GithubManager>;
 
 const initialContext = {
   users: [],
+  user: null,
   loading: true,
   findUsers: () => false,
+  getUser: () => false,
   clearUsers: () => false,
 };
 const GithubContext = createContext<GithubContextType>(initialContext);
 
 interface IGithubManagerResult {
   users: IUser[];
+  user: IUser | null;
   loading: boolean;
   findUsers: (text: string) => void;
+  getUser: (text: string) => void;
   clearUsers: () => void;
 }
 
 const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
+  const navigate = useNavigate();
+
   const initialState = {
     users: initialUsers,
+    user: null,
     loading: false,
   };
 
@@ -44,6 +52,7 @@ const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
 
   // Set loading
   const setLoading = () => dispatch({ type: "SET_LOADING" });
+  const stopLoading = () => dispatch({ type: "STOP_LOADING" });
 
   // Clear Users
   const clearUsers = () =>
@@ -52,7 +61,26 @@ const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
       payload: [],
     });
 
-  return { ...state, findUsers, clearUsers };
+  // Get single user
+  const getUser = async (id) => {
+    console.log("getUser", id);
+    setLoading();
+
+    const { status, data } = await getUserReguest(id);
+    console.log(status, data); // data === undefined if Error
+
+    if (status === 404) {
+      stopLoading();
+      navigate("/404");
+    } else {
+      dispatch({
+        type: "SET_USER",
+        payload: data,
+      });
+    }
+  };
+
+  return { ...state, findUsers, clearUsers, getUser };
 };
 
 const startValues = [];
