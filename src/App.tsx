@@ -17,7 +17,7 @@ const App = () => (
           <GithubProvider>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/user/:id" element={<User />} />
+              <Route path="/user/:login" element={<User />} />
               <Route path="/about" element={<About />} />
               <Route path="*" element={<Error404 />} />
             </Routes>

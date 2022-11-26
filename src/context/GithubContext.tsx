@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { IUser, IUserDetail } from "../interfaces";
-import { findUsersReguest, getUserReguest } from "../services/api";
+import { findUsersReguest, getUserReguest, getUserReposReguest } from "../services/api";
 import githubReducer from "./GithubReducer";
 
 type GithubContextType = ReturnType<typeof GithubManager>;
@@ -9,20 +9,24 @@ type GithubContextType = ReturnType<typeof GithubManager>;
 const initialContext = {
   users: [],
   user: null,
+  repos: null,
   loading: true,
   findUsers: () => false,
-  getUser: () => false,
   clearUsers: () => false,
+  getUser: () => false,
+  getUserRepos: () => false,
 };
 const GithubContext = createContext<GithubContextType>(initialContext);
 
 interface IGithubManagerResult {
   users: IUser[];
   user: IUserDetail | null;
+  repos: any | null;
   loading: boolean;
   findUsers: (text: string) => void;
-  getUser: (text: string) => void;
   clearUsers: () => void;
+  getUser: (text: string) => void;
+  getUserRepos: (login: string) => void;
 }
 
 const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
@@ -31,6 +35,7 @@ const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
   const initialState = {
     users: initialUsers,
     user: null,
+    repos: null,
     loading: false,
   };
 
@@ -80,7 +85,20 @@ const GithubManager = (initialUsers: IUser[]): IGithubManagerResult => {
     }
   };
 
-  return { ...state, findUsers, clearUsers, getUser };
+  // Get user repos
+  const getUserRepos = async (login) => {
+    setLoading();
+
+    const { data, status } = await getUserReposReguest(login);
+    console.log(data, status);
+
+    dispatch({
+      type: "SET_REPOS",
+      payload: data,
+    });
+  };
+
+  return { ...state, findUsers, clearUsers, getUser, getUserRepos };
 };
 
 const startValues = [];

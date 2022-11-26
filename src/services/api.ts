@@ -38,3 +38,10 @@ export const getUserReguest = async (text: string) => {
 
   return { data: response?.data, status };
 };
+
+export const getUserReposReguest = async (login: string) => {
+  const params = new URLSearchParams({ sort: "created", per_page: "10" });
+  const { data, status } = await axios.get(`${baseUrl}users/${login}/repos?${params}`, createOptions());
+
+  return { data, status };
+};
