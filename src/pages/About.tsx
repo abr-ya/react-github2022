@@ -12,7 +12,7 @@ const About = () => (
       <li>маршрутизация: React Router 6</li>
       <li>авторизация: -</li>
       <li>запросы на сервер: Axios</li>
-      <li>хранилище: ???</li>
+      <li>хранилище: React Context</li>
       <li>иконки: React Icons</li>
     </ul>
   </>
